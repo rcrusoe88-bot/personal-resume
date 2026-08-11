@@ -374,6 +374,78 @@ def load_data(input_path):
         return json.load(f)
 
 
+# ---------------------------------------------------------------- 内容完整性检查
+REQUIRED_SECTIONS = [
+    ('summary', '个人简介'),
+    ('education', '教育背景'),
+    ('experiences', '工作经历'),
+    ('skills', '专业技能'),
+]
+
+OPTIONAL_SECTIONS = [
+    ('contact', '联系方式'),
+    ('projects', '项目经历'),
+    ('honors', '荣誉证书'),
+    ('highlights', '个人亮点'),
+    ('self_evaluation', '自我评价'),
+]
+
+
+def has_content(data, key):
+    """判断某分节是否有实际内容"""
+    v = data.get(key)
+    if key == 'contact':
+        return isinstance(v, dict) and bool(v)
+    if isinstance(v, str):
+        return bool(v.strip())
+    if isinstance(v, list):
+        return len(v) > 0
+    if isinstance(v, dict):
+        return any(bool(x) for x in v.values())
+    return False
+
+
+def sample_value(data, key):
+    """取某分节的一小段示例值，便于引导时展示"""
+    v = data.get(key)
+    if key == 'contact':
+        return str(next(iter(v.values()), '')) if isinstance(v, dict) and v else ''
+    if isinstance(v, str):
+        return v[:20]
+    if isinstance(v, list):
+        if not v:
+            return ''
+        first = v[0]
+        if isinstance(first, dict):
+            return str(next(iter(first.values()), ''))[:20]
+        return str(first)[:20]
+    if isinstance(v, dict):
+        return str(next(iter(v.values()), ''))[:20]
+    return ''
+
+
+def check_content(data):
+    """返回分节完整性报告：[('required'|'optional', key, 中文名, 是否有内容, 示例值)]"""
+    report = []
+    for key, label in REQUIRED_SECTIONS:
+        report.append(('required', key, label, has_content(data, key), sample_value(data, key)))
+    for key, label in OPTIONAL_SECTIONS:
+        report.append(('optional', key, label, has_content(data, key), sample_value(data, key)))
+    return report
+
+
+def print_check_report(data, report):
+    """打印分节完整性报告（供引导用户补齐/跳过）"""
+    print('简历内容检查：{}'.format(data.get('name', '未命名')))
+    for kind, key, label, ok, sample in report:
+        if kind == 'required':
+            status = '✅ 有' if ok else '❌ 缺失（必备，建议补齐）'
+        else:
+            status = '✅ 有' if ok else '⚪ 缺失（可选，可跳过）'
+        extra = '：' + sample if sample else ''
+        print('  {} {}{}'.format(status, label, extra))
+
+
 def build_experiences_html(experiences):
     """构建工作经历 HTML（相对缩进，相对于 section 层级）"""
     blocks = []
@@ -557,6 +629,11 @@ def main():
         help='配色名，如 红棕/烟粉/柳黄/秋波蓝 等（默认红棕 #894E54）',
         default=None
     )
+    parser.add_argument(
+        '--check',
+        action='store_true',
+        help='仅解析并输出分节完整性报告（用于引导用户补齐内容），不生成 HTML'
+    )
     args = parser.parse_args()
 
     # 脚本所在目录
@@ -583,8 +660,14 @@ def main():
         json_name = os.path.splitext(os.path.basename(args.input_file))[0]
         output_path = os.path.join(json_dir, '{}_{}.html'.format(json_name, template_name))
 
-    # 加载数据和模板
+    # 加载数据
     data = load_data(args.input_file)
+
+    # 仅检查模式：输出分节完整性报告，供引导用户补齐/跳过
+    if args.check:
+        print_check_report(data, check_content(data))
+        return
+
     template = load_template(template_path)
 
     # 应用配色

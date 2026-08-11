@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/github/last-commit/rcrusoe88-bot/personal-resume?style=flat-square" alt="Last Commit">
 </p>
 
-> 一个基于 JSON 数据的个人简历生成器 Skill。输入结构化 JSON，一键生成可预览、截图或打印为 PDF 的 A4 HTML 简历，支持「楷体雅致」与「霞鹜致宋」两套视觉系统、8 套模板与 12 种配色。
+> 一个基于 Markdown / Word 简历文档的个人简历生成器 Skill。输入 `.md` 或 `.docx` 简历文档（也支持结构化 JSON），一键生成可预览、截图或打印为 PDF 的 A4 HTML 简历，支持「楷体雅致」与「霞鹜致宋」两套视觉系统、8 套模板与 12 种配色，并会自动检查分节完整性、引导补齐或跳过。
 
 ## 功能特性
 
@@ -17,7 +17,8 @@
 - 📄 **A4 标准尺寸**：210mm × 297mm，浏览器直接打开即成品
 - 🔒 **本地处理**：全部在本地完成，不上传任何数据，保护隐私
 - 🖨️ **多种输出**：浏览器预览 / Ctrl+P 存 PDF / 开发者工具截全页
-- 🧩 **多格式输入**：支持 JSON（.json）/ Markdown（.md）/ Word（.docx），自动识别并解析
+- 🧩 **多格式输入**：支持 Markdown（.md）/ Word（.docx）/ JSON（.json），自动识别并解析
+- 💬 **内容引导**：解析后检查分节完整性，缺失的必备分节引导补齐，可选分节（荣誉/亮点等）可选择跳过
 
 ## 快速开始
 
@@ -61,6 +62,19 @@ python scripts/generate.py data.json --template templates/kaiti-elegant.html
 - **霞鹜致宋**：使用霞鹜致宋字体 `LXGWZhiSongMN.ttf`（约 8.7MB），已随仓库分发于
   `assets/fonts/` 目录，clone 后开箱即用；生成时脚本自动复制到输出目录。
   缺失（或使用不带字体的旧副本）时回退系统宋体，仍可正常使用。
+
+## 内容引导
+
+用户提交的简历若未按标准分节书写，skill 会先检查分节完整性并引导补齐：
+- **必备分节**：个人简介 / 教育背景 / 工作经历 / 专业技能（缺失时引导补充）
+- **可选分节**：联系方式 / 项目经历 / 荣誉证书 / 个人亮点 / 自我评价（可跳过）
+
+```bash
+# 先查看分节检查报告
+python scripts/generate.py resume.md --check
+```
+
+用户可随时说"跳过"，对应分节不展示。详细引导规则见 [SKILL.md](SKILL.md)。
 
 ## JSON 数据格式
 
