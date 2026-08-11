@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{name}} - 个人简历（楷体雅致）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "STKaiti", "KaiTi", "楷体", "Microsoft YaHei", serif;
+            background: #f0ece4;
+            color: #3a3a3a;
+            line-height: 1.9;
+        }
+
+        .resume {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 20px auto;
+            background: #fffef9;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            padding: 0;
+            position: relative;
+        }
+
+        .resume::before {
+            content: '';
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            right: 18px;
+            bottom: 18px;
+            border: 1px solid #c4b69c;
+            pointer-events: none;
+        }
+
+        .resume-body {
+            padding: 48px 52px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 头部 */
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #d4c4a8;
+        }
+
+        .name {
+            font-size: 38px;
+            font-weight: 400;
+            color: #4a3a2a;
+            letter-spacing: 14px;
+            margin-bottom: 10px;
+        }
+
+        .personal-info {
+            font-size: 15px;
+            color: #7a6a5a;
+            display: flex;
+            justify-content: center;
+            gap: 35px;
+        }
+
+        /* 章节标题 */
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 400;
+            color: #4a3a2a;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::before {
+            content: '\25C6';
+            color: #c4b69c;
+            font-size: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, #d4c4a8, transparent);
+        }
+
+        /* 教育背景 */
+        .education-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 5px;
+        }
+
+        .edu-school {
+            font-size: 17px;
+            font-weight: 400;
+            color: #3a2a1a;
+        }
+
+        .edu-date {
+            font-size: 14px;
+            color: #9a8a7a;
+        }
+
+        .edu-major {
+            font-size: 15px;
+            color: #6a5a4a;
+            margin-bottom: 5px;
+        }
+
+        .edu-research {
+            font-size: 14px;
+            color: #5a4a3a;
+            padding-left: 15px;
+            border-left: 2px solid #d4c4a8;
+        }
+
+        /* 工作经历 */
+        .experience {
+            margin-bottom: 28px;
+            padding-left: 22px;
+            border-left: 2px solid #d4c4a8;
+            position: relative;
+        }
+
+        .experience::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 6px;
+            width: 10px;
+            height: 10px;
+            background: #c4b69c;
+            border-radius: 2px;
+            border: 2px solid #fffef9;
+        }
+
+        .experience:last-child {
+            margin-bottom: 0;
+        }
+
+        .exp-header {
+            margin-bottom: 4px;
+        }
+
+        .exp-company {
+            font-size: 17px;
+            font-weight: 400;
+            color: #3a2a1a;
+        }
+
+        .exp-date {
+            font-size: 13px;
+            color: #9a8a7a;
+            background: #f5f0e6;
+            padding: 3px 12px;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .exp-position {
+            font-size: 15px;
+            color: #6a5a4a;
+            margin: 8px 0;
+        }
+
+        .exp-description {
+            font-size: 14px;
+            color: #4a3a2a;
+        }
+
+        .exp-description ul {
+            padding-left: 18px;
+            list-style: none;
+        }
+
+        .exp-description li {
+            margin-bottom: 5px;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .exp-description li::before {
+            content: '\25A0';
+            color: #c4b69c;
+            font-size: 8px;
+            position: absolute;
+            left: -16px;
+            top: 2px;
+        }
+
+        /* 项目经验 */
+        .project {
+            margin-bottom: 18px;
+            padding: 14px 18px;
+            background: linear-gradient(135deg, #faf6ee, #f5efe3);
+            border-left: 3px solid #c4b69c;
+        }
+
+        .project:last-child {
+            margin-bottom: 0;
+        }
+
+        .project-name {
+            font-size: 15px;
+            font-weight: 400;
+            color: #3a2a1a;
+            margin-bottom: 6px;
+        }
+
+        .project-detail {
+            font-size: 13px;
+            color: #4a3a2a;
+        }
+
+        .project-detail ul {
+            padding-left: 14px;
+            list-style: none;
+        }
+
+        .project-detail li {
+            margin-bottom: 4px;
+            line-height: 1.7;
+            position: relative;
+        }
+
+        .project-detail li::before {
+            content: '\25A0';
+            color: #c4b69c;
+            font-size: 8px;
+            position: absolute;
+            left: -14px;
+            top: 2px;
+        }
+
+        /* 技能标签 */
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill-tag {
+            padding: 5px 14px;
+            background: linear-gradient(135deg, #f5efe3, #ede5d5);
+            color: #5a4a3a;
+            font-size: 13px;
+            border: 1px solid #d4c4a8;
+        }
+
+        /* 个人亮点 */
+        .highlights {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .highlight-item {
+            padding: 12px 16px;
+            background: #faf6ee;
+            border-left: 3px solid #c4b69c;
+        }
+
+        .highlight-label {
+            font-size: 12px;
+            color: #9a8a7a;
+            margin-bottom: 4px;
+        }
+
+        .highlight-value {
+            font-size: 15px;
+            color: #3a2a1a;
+        }
+
+        /* 底部 */
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #b0a090;
+        }
+
+        @media print {
+            @page {
+                margin: 0;
+                size: A4;
+            }
+            body {
+                background: white;
+            }
+            .resume {
+                box-shadow: none;
+                margin: 0;
+                padding: 48px 52px;
+                background: #fffef9;
+                width: 100%;
+                min-height: 100vh;
+            }
+            .resume::before {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="resume">
+        <div class="resume-body">
+            <!-- 头部 -->
+            <header class="header">
+                <h1 class="name">{{name_display}}</h1>
+                <div class="personal-info">
+                    <span>{{birthday}}</span>
+                    <span>{{location}}</span>
+                </div>
+            </header>
+
+            <!-- 教育背景 -->
+            <section class="section">
+                <h2 class="section-title">教育背景</h2>
+                <div class="education-main">
+                    <span class="edu-school">{{education_school}}</span>
+                    <span class="edu-date">{{education_date}}</span>
+                </div>
+                <p class="edu-major">{{education_major}}</p>
+                <p class="edu-research">{{education_research}}</p>
+            </section>
+
+            <!-- 工作经历 -->
+            <section class="section">
+                <h2 class="section-title">职业履历</h2>
+                {{experiences}}
+            </section>
+
+            <!-- 项目经验 -->
+            <section class="section">
+                <h2 class="section-title">代表性项目</h2>
+                {{projects}}
+            </section>
+
+            <!-- 专业技能 -->
+            <section class="section">
+                <h2 class="section-title">专业技能</h2>
+                <div class="skill-tags">
+                    {{skills}}
+                </div>
+            </section>
+
+            <!-- 个人亮点 -->
+            <section class="section">
+                <h2 class="section-title">个人亮点</h2>
+                <div class="highlights">
+                    {{highlights}}
+                </div>
+            </section>
+
+            <div class="footer">最后更新于 {{update_date}}</div>
+        </div>
+    </div>
+</body>
+</html>
