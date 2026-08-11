@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{name}} - 个人简历（致宋·留白大气）</title>
+<style>
+  @font-face {
+    font-family: 'LXGW ZhiSong';
+    src: url('assets/fonts/LXGWZhiSongMN.ttf') format('truetype');
+    font-display: swap;
+  }
+  :root {
+    --primary: {{primary_color}};
+    --deep: {{deep_color}};
+    --soft: {{soft_color}};
+    --line: {{line_color}};
+    --ink: #3A3532;
+    --muted: #A79B96;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #EFECE9;
+    display: flex; justify-content: center;
+    padding: 24px 12px;
+    font-family: 'LXGW ZhiSong', 'Songti SC', 'STSong', 'SimSun', serif;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm; min-height: 297mm;
+    background: #FFFFFF;
+    padding: 15mm 24mm 10mm;
+    box-shadow: 0 8px 40px rgba(0,0,0,.10);
+    display: flex; flex-direction: column;
+  }
+  /* ---------- 极简头部 ---------- */
+  header { text-align: left; }
+  .monogram { font-size: 11px; letter-spacing: .5em; text-indent: .5em; color: var(--deep); margin-bottom: 8mm; }
+  header h1 { font-size: 44px; font-weight: 400; letter-spacing: .18em; text-indent: .18em; color: var(--ink); line-height: 1.2; }
+  header .en { margin-top: 2.5mm; font-size: 10.5px; letter-spacing: .4em; text-indent: .4em; color: var(--muted); }
+  .divider { width: 100%; height: 1px; background: var(--line); margin: 6mm 0; }
+  .divider.primary { width: 30mm; height: 2px; background: var(--primary); margin: 5mm 0; }
+  .contact { display: flex; gap: 12mm; flex-wrap: wrap; font-size: 10.3px; letter-spacing: .1em; color: var(--muted); }
+  .contact span i { font-style: normal; color: var(--deep); margin-right: 2mm; }
+  /* ---------- 单栏正文 ---------- */
+  .content { flex: 1; margin-top: 2mm; }
+  .sec { margin-bottom: 5mm; }
+  .sec h2 {
+    font-size: 10.8px; font-weight: 400; letter-spacing: .34em; text-indent: .34em;
+    color: var(--primary); margin-bottom: 3mm;
+    display: flex; align-items: center; gap: 4mm;
+  }
+  .sec h2::before { content: ""; width: 4.5mm; height: 4.5mm; border: 1.5px solid var(--primary); transform: rotate(45deg); }
+  .summary { font-size: 10.5px; line-height: 1.7; color: #57504D; text-align: justify; }
+  .experience { margin-bottom: 4mm; }
+  .exp-company { font-size: 12.8px; color: var(--ink); }
+  .exp-date { font-size: 9.3px; color: var(--muted); margin-top: .8mm; letter-spacing: .12em; display: block; }
+  .exp-position { font-size: 10.3px; color: var(--deep); margin-top: .8mm; }
+  .exp-description { margin-top: 1.5mm; }
+  .exp-description ul { list-style: none; }
+  .exp-description li { font-size: 10.2px; line-height: 1.62; color: #5C5652; text-align: justify; }
+  .project { margin-bottom: 3.5mm; }
+  .project-name { font-size: 12.3px; color: var(--ink); }
+  .project-detail { margin-top: 1.2mm; font-size: 10.2px; line-height: 1.62; color: #5C5652; text-align: justify; }
+  .project-detail ul { list-style: none; }
+  .edu { font-size: 10.3px; line-height: 1.7; color: #5C5652; }
+  .edu b { font-weight: 400; color: var(--ink); }
+  .foot { margin-top: auto; padding-top: 6mm; border-top: 1px solid var(--line); font-size: 9px; letter-spacing: .3em; text-indent: .3em; color: var(--muted); text-align: right; }
+  @media print {
+    body { background: none; padding: 0; }
+    .page { box-shadow: none; }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="monogram">RESUME · CV</div>
+      <h1>{{name_display}}</h1>
+      <div class="en">Personal Resume</div>
+      <div class="divider primary"></div>
+      <div class="contact">
+        <span><i>电话</i>{{contact_phone}}</span>
+        <span><i>邮箱</i>{{contact_email}}</span>
+        <span><i>坐标</i>{{contact_city}}</span>
+      </div>
+    </header>
+
+    <div class="divider"></div>
+
+    <div class="content">
+      <section class="sec">
+        <h2>个人简介</h2>
+        <p class="summary">{{summary}}</p>
+      </section>
+
+      <section class="sec">
+        <h2>工作经历</h2>
+        {{experiences}}
+      </section>
+
+      <section class="sec">
+        <h2>项目经历</h2>
+        {{projects}}
+      </section>
+
+      <section class="sec">
+        <h2>教育背景</h2>
+        <div class="edu">
+          <b>{{education_school}}</b> · {{education_major}} · {{education_date}}
+        </div>
+      </section>
+    </div>
+
+    <div class="foot">{{self_evaluation}}</div>
+  </div>
+</body>
+</html>
