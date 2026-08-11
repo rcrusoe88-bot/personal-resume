@@ -1,5 +1,16 @@
 # Personal Resume — 楷体雅致简历生成器
 
+<p align="center">
+  <img src="https://img.shields.io/github/license/rcrusoe88-bot/personal-resume?style=flat-square" alt="License">
+  <img src="https://img.shields.io/github/stars/rcrusoe88-bot/personal-resume?style=flat-square" alt="Stars">
+  <img src="https://img.shields.io/github/last-commit/rcrusoe88-bot/personal-resume?style=flat-square" alt="Last Commit">
+  <img src="https://img.shields.io/github/languages/top/rcrusoe88-bot/personal-resume?style=flat-square" alt="Top Language">
+</p>
+
+<p align="center">
+  <img src="https://github-readme-stats.vercel.app/api/pin/?username=rcrusoe88-bot&repo=personal-resume&theme=vue&show_owner=true" alt="personal-resume 仓库数据">
+</p>
+
 > 一个基于「楷体雅致」视觉系统的个人简历生成器 Skill。输入结构化 JSON 数据，一键生成可直接在浏览器预览、截图或打印为 PDF 的 A4 尺寸 HTML 简历。
 
 ## 功能特性
@@ -95,3 +106,10 @@ personal-resume/
 ## 许可
 
 本项目作为 Skill 开源发布，仅含通用模板与示例（示例数据为脱敏占位内容）。使用与再分发请遵循 Skill 原始授权约定。
+
+## 📊 作者 GitHub 数据
+
+<p align="center">
+  <img src="https://github-readme-stats.vercel.app/api?username=rcrusoe88-bot&show_icons=true&theme=vue" alt="rcrusoe88-bot 的 GitHub 统计">
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=rcrusoe88-bot&layout=compact&theme=vue" alt="rcrusoe88-bot 的常用语言">
+</p>
