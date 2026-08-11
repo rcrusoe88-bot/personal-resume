@@ -1,41 +1,63 @@
-# Personal Resume — 楷体雅致简历生成器
+# Personal Resume — 多模板简历生成器
 
 <p align="center">
   <img src="https://img.shields.io/github/license/rcrusoe88-bot/personal-resume?style=flat-square" alt="License">
   <img src="https://img.shields.io/github/stars/rcrusoe88-bot/personal-resume?style=flat-square" alt="Stars">
   <img src="https://img.shields.io/github/last-commit/rcrusoe88-bot/personal-resume?style=flat-square" alt="Last Commit">
-  <img src="https://img.shields.io/github/languages/top/rcrusoe88-bot/personal-resume?style=flat-square" alt="Top Language">
 </p>
 
-<p align="center">
-  <img src="https://github-readme-stats-eight-theta.vercel.app/api/pin/?username=rcrusoe88-bot&repo=personal-resume&theme=vue&show_owner=true" alt="personal-resume 仓库数据">
-</p>
-
-> 一个基于「楷体雅致」视觉系统的个人简历生成器 Skill。输入结构化 JSON 数据，一键生成可直接在浏览器预览、截图或打印为 PDF 的 A4 尺寸 HTML 简历。
+> 一个基于 JSON 数据的个人简历生成器 Skill。输入结构化 JSON，一键生成可预览、截图或打印为 PDF 的 A4 HTML 简历，支持「楷体雅致」与「霞鹜致宋」两套视觉系统、8 套模板与 12 种配色。
 
 ## 功能特性
 
-- 🎨 **楷体雅致视觉系统**：楷体字体优先级链、暖棕色系配色、装饰性内边框、章节标题菱形标记、时间线式工作经历、渐变项目卡片、双列亮点 grid
+- 🎨 **两套视觉系统**：
+  - **楷体雅致**（kaiti-elegant）：楷体字体、暖棕色系、菱形标记、时间线式经历、渐变项目卡片
+  - **霞鹜致宋**（zhisong-*）：霞鹜致宋字体、7 套版式（左右分栏/极简/时间线/杂志/卡片/手账/留白）、12 种主题配色
+- 🎨 **12 种配色**：红棕 / 烟粉 / 柳黄 / 浅驼色 / 云峰白 / 秋波蓝 / 橄榄黄绿 / 珍珠灰 / 杏仁黄 / 奶油白 / 菠萝红 / 海棠
 - 📄 **A4 标准尺寸**：210mm × 297mm，浏览器直接打开即成品
 - 🔒 **本地处理**：全部在本地完成，不上传任何数据，保护隐私
 - 🖨️ **多种输出**：浏览器预览 / Ctrl+P 存 PDF / 开发者工具截全页
-- 🧩 **结构化输入**：JSON 定义教育、经历、项目、技能、亮点，字段自由增减
+- 🧩 **结构化输入**：JSON 定义联系方式、简介、教育、经历、项目、技能、荣誉、亮点，字段自由增减
 
 ## 快速开始
 
 ```bash
 # 1. 准备 JSON 简历数据（格式见下方）
-# 2. 使用示例数据测试
+# 2. 使用示例数据测试（默认楷体雅致）
 python scripts/generate.py examples/wushengjun.json
 
-# 3. 指定输出路径
-python scripts/generate.py examples/wushengjun.json --output my_resume.html
+# 3. 致宋 · 经典左右分栏 + 烟粉配色
+python scripts/generate.py examples/wushengjun.json --template zhisong-sidebar --color smoke-pink
 
-# 4. 使用自定义模板
+# 4. 致宋 · 圆角卡片 + 秋波蓝，指定输出路径
+python scripts/generate.py data.json --template zhisong-cards --color 秋波蓝 --output my_resume.html
+
+# 5. 使用自定义模板
 python scripts/generate.py data.json --template templates/kaiti-elegant.html
 ```
 
 生成成功后用浏览器打开 HTML 即可预览，Ctrl+P 可另存为 PDF。
+
+## 模板一览
+
+| 模板名 | 风格 | 配色支持 |
+|--------|------|---------|
+| `kaiti-elegant` | 楷体雅致（默认） | — |
+| `zhisong-sidebar` | 致宋 · 经典左右分栏 | ✅ 12 色 |
+| `zhisong-minimal` | 致宋 · 极简居中 | ✅ 12 色 |
+| `zhisong-timeline` | 致宋 · 叙事时间线 | ✅ 12 色 |
+| `zhisong-magazine` | 致宋 · 杂志版面 | ✅ 12 色 |
+| `zhisong-cards` | 致宋 · 圆角卡片 | ✅ 12 色 |
+| `zhisong-handbook` | 致宋 · 文创手账 | ✅ 12 色 |
+| `zhisong-breath` | 致宋 · 留白大气 | ✅ 12 色 |
+
+## 字体说明
+
+- **楷体雅致**：使用系统楷体（STKaiti / KaiTi），无需额外文件；
+- **霞鹜致宋**：使用霞鹜致宋字体 `LXGWZhiSongMN.ttf`（约 8.7MB），不随仓库分发。
+  首次使用请从 [LxgwZhiSong Releases](https://github.com/lxgw/LxgwZhiSong/releases) 下载，
+  放置到 skill 的 `assets/fonts/` 目录；生成时脚本自动复制到输出目录。
+  缺失时回退系统宋体，仍可正常使用。
 
 ## JSON 数据格式
 
@@ -45,6 +67,13 @@ python scripts/generate.py data.json --template templates/kaiti-elegant.html
   "name_display": "姓 名（带空格展示）",
   "birthday": "出生日期",
   "location": "所在地",
+  "contact": {
+    "phone": "电话",
+    "email": "邮箱",
+    "city": "城市",
+    "website": "个人主页"
+  },
+  "summary": "个人简介",
   "education": {
     "school": "学校名称",
     "date": "起止时间",
@@ -66,15 +95,19 @@ python scripts/generate.py data.json --template templates/kaiti-elegant.html
     }
   ],
   "skills": ["技能1", "技能2"],
+  "honors": ["荣誉1", "荣誉2"],
   "highlights": [
     {
       "label": "亮点标签",
       "value": "亮点内容"
     }
   ],
+  "self_evaluation": "自我评价",
   "update_date": "更新日期"
 }
 ```
+
+> `contact`、`summary`、`honors`、`self_evaluation` 为可选字段（致宋模板展示）；旧版 JSON 完全兼容。
 
 ## 目录结构
 
@@ -83,33 +116,33 @@ personal-resume/
 ├── SKILL.md                    # Skill 定义文件（含触发条件与使用说明）
 ├── README.md                   # 本文件
 ├── reference/
-│   └── kaiti-style.md          # 楷体雅致视觉规范（色彩、字体、布局、组件）
+│   ├── kaiti-style.md          # 楷体雅致视觉规范
+│   └── zhisong-style.md        # 霞鹜致宋视觉规范
 ├── templates/
-│   └── kaiti-elegant.html      # HTML 模板（含 {{占位符}}）
+│   ├── kaiti-elegant.html      # 楷体雅致模板（默认）
+│   ├── zhisong-sidebar.html    # 致宋 · 经典左右分栏
+│   ├── zhisong-minimal.html    # 致宋 · 极简居中
+│   ├── zhisong-timeline.html   # 致宋 · 叙事时间线
+│   ├── zhisong-magazine.html   # 致宋 · 杂志版面
+│   ├── zhisong-cards.html      # 致宋 · 圆角卡片
+│   ├── zhisong-handbook.html   # 致宋 · 文创手账
+│   └── zhisong-breath.html     # 致宋 · 留白大气
 ├── scripts/
 │   └── generate.py             # 生成脚本（JSON → HTML）
 └── examples/
-    ├── wushengjun.json         # 示例数据（脱敏占位内容）
-    └── wushengjun_楷体雅致.html # 示例输出
+    └── wushengjun.json         # 示例数据（脱敏占位内容）
 ```
 
 ## 触发关键词
 
-个人简历、生成简历、简历模板、楷体、楷体雅致、kaiti、kaiti-elegant、personal resume、kaiti resume
+个人简历、生成简历、简历模板、楷体、楷体雅致、kaiti、kaiti-elegant、致宋、霞鹜、zhisong、personal resume
 
 ## 使用场景
 
 1. **从 JSON 生成**：已有结构化数据，直接渲染为简历
 2. **口述内容生成**：口述个人信息，助手构建 JSON 后生成
-3. **更新现有简历**：修改 JSON 指定字段，重新生成 HTML
+3. **更新现有简历**：修改 JSON 指定字段或更换配色，重新生成 HTML
 
 ## 许可
 
-本项目作为 Skill 开源发布，仅含通用模板与示例（示例数据为脱敏占位内容）。使用与再分发请遵循 Skill 原始授权约定。
-
-## 📊 作者 GitHub 数据
-
-<p align="center">
-  <img src="https://github-readme-stats-eight-theta.vercel.app/api?username=rcrusoe88-bot&show_icons=true&theme=vue" alt="rcrusoe88-bot 的 GitHub 统计">
-  <img src="https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=rcrusoe88-bot&layout=compact&theme=vue" alt="rcrusoe88-bot 的常用语言">
-</p>
+本项目作为 Skill 开源发布，仅含通用模板与示例（示例数据为脱敏占位内容）。霞鹜致宋字体遵循 [IPA Font License 1.0](https://opensource.org/licenses/IPA/)。
