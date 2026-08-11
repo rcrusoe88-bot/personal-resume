@@ -171,6 +171,13 @@ personal-resume/
 2. **口述内容生成**：口述个人信息，助手整理后生成
 3. **更新现有简历**：修改文档或更换配色，重新生成 HTML
 
+## 灵感与致谢
+
+本项目在设计与实现中借鉴了以下优秀项目与资源，感谢原作者的开源贡献：
+
+- **色彩搭配灵感**：[xiaoxiaodong.ai 色彩库](https://colors.xiaoxiaodong.ai/) —— 12 种主题配色（红棕 / 烟粉 / 柳黄 / 浅驼色 / 云峰白 / 秋波蓝 / 橄榄黄绿 / 珍珠灰 / 杏仁黄 / 奶油白 / 菠萝红 / 海棠）的选色思路借鉴自该站；
+- **霞鹜致宋字体**：[LXGW ZhiSong（霞鹜致宋）](https://github.com/lxgw/LxgwZhiSong) by [lxgw](https://github.com/lxgw) —— 致宋系列模板使用的衬线字体，遵循 [IPA Font License 1.0](https://opensource.org/licenses/IPA/)。
+
 ## 许可
 
 本项目作为 Skill 开源发布，仅含通用模板与示例（示例数据为脱敏占位内容）。霞鹜致宋字体遵循 [IPA Font License 1.0](https://opensource.org/licenses/IPA/)。
