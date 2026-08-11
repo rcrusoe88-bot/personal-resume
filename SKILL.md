@@ -12,7 +12,7 @@ description: >
 
 # Personal Resume Skill — 多模板简历生成器
 
-输入结构化 JSON 数据，输出可直接在浏览器预览、截图或打印为 PDF 的 A4 尺寸 HTML 简历。
+输入 Markdown（.md）或 Word（.docx）简历文档，输出可直接在浏览器预览、截图或打印为 PDF 的 A4 尺寸 HTML 简历。
 
 ## 触发条件
 
@@ -27,24 +27,24 @@ description: >
 
 ### 生成简历 (generate)
 
-从 JSON 数据生成指定模板与配色的 HTML 简历。
+从 Markdown / Word 简历文档生成指定模板与配色的 HTML 简历。
 
 **触发示例：**
 - "帮我生成个人简历"
-- "用楷体风格生成简历，数据在 my_data.json"
+- "用楷体风格生成简历，数据在 my_resume.md"
 - "用致宋·经典左右分栏模板，烟粉配色，生成简历"
-- "personal-resume generate data.json --template zhisong-sidebar --color 烟粉"
+- "personal-resume generate resume.md --template zhisong-sidebar --color 烟粉"
 
 **执行流程：**
-1. 读取用户提供的简历文件（支持 `.json` / `.md` / `.docx`，或用户口述内容自行构建）
+1. 读取用户提供的简历文件（支持 `.md` / `.docx`，兼容 `.json`，或用户口述内容自行构建）
 2. 确定模板（`--template`，默认楷体雅致）与配色（`--color`，默认红棕）
 3. 运行 `scripts/generate.py` 填充模板
 4. 输出完整 HTML 文件（含字体复制）
 
 **输入格式说明：**
-- **JSON**（.json）：最完整，字段见下方 JSON 数据格式；
-- **Markdown**（.md）：按标题分节，见下方 Markdown 简历格式；
-- **Word**（.docx）：直接读取正文，按标题/段落识别，无需安装 python-docx。
+- **Markdown**（.md）：推荐，按标题分节，见下方 Markdown 简历格式；
+- **Word**（.docx）：直接读取正文，按标题/段落识别，无需安装 python-docx；
+- **JSON**（.json）：兼容，字段见下方说明。
 
 ### 模板一览（--template）
 
@@ -67,7 +67,7 @@ pineapple-red 菠萝红 / begonia 海棠`（中英文名均可）
 
 配色由主色自动衍生深色强调、浅色背景与分隔线，保证任意主色下可读性。
 
-**JSON 数据格式：**
+**字段说明（JSON，兼容）：**
 ```json
 {
   "name": "姓名",
@@ -114,10 +114,9 @@ pineapple-red 菠萝红 / begonia 海棠`（中英文名均可）
 }
 ```
 
-> `contact`、`summary`、`honors`、`self_evaluation` 为可选字段，缺失时对应区域留空；
-> 旧版 JSON（无上述字段）同样兼容。
+> 上表为 JSON 兼容字段说明；`contact`、`summary`、`honors`、`self_evaluation` 为可选字段，缺失时对应区域留空。
 
-**Markdown 简历格式（.md）：**
+**Markdown 简历格式（推荐）：**
 
 Markdown 输入按标题分节，列表项作条目，`·` 分隔公司/职位/时间。示例：
 
@@ -172,10 +171,10 @@ python scripts/generate.py <简历文件> [--output <输出路径>] [--template 
 **示例：**
 ```bash
 # 使用示例数据测试（默认楷体雅致）
-python scripts/generate.py examples/wushengjun.json
+python scripts/generate.py examples/resume.md
 
 # 致宋 · 经典左右分栏 + 烟粉配色
-python scripts/generate.py examples/wushengjun.json --template zhisong-sidebar --color smoke-pink
+python scripts/generate.py examples/resume.md --template zhisong-sidebar --color smoke-pink
 
 # 从 Markdown 简历生成（致宋 · 极简 + 秋波蓝）
 python scripts/generate.py examples/resume.md --template zhisong-minimal --color autumn-blue
@@ -184,10 +183,10 @@ python scripts/generate.py examples/resume.md --template zhisong-minimal --color
 python scripts/generate.py my_resume.docx --template zhisong-breath
 
 # 致宋 · 圆角卡片 + 秋波蓝，指定输出
-python scripts/generate.py data.json --template zhisong-cards --color 秋波蓝 --output my_resume.html
+python scripts/generate.py resume.md --template zhisong-cards --color 秋波蓝 --output my_resume.html
 
 # 使用自定义模板路径
-python scripts/generate.py data.json --template ./my-template.html
+python scripts/generate.py resume.md --template ./my-template.html
 ```
 
 ## 文件结构
@@ -208,9 +207,10 @@ personal-resume/
 │   ├── zhisong-handbook.html   # 致宋 · 文创手账
 │   └── zhisong-breath.html     # 致宋 · 留白大气
 ├── scripts/
-│   └── generate.py             # 生成脚本（JSON → HTML，含配色衍生）
+│   └── generate.py             # 生成脚本（Markdown / Word → HTML，兼容 JSON）
 └── examples/
-    └── wushengjun.json         # 示例数据（含 contact/summary/honors 等）
+    ├── resume.md               # 示例数据 · Markdown 格式（推荐）
+    └── wushengjun.json         # 示例数据 · JSON 格式（兼容）
 ```
 
 ## 字体说明（霞鹜致宋模板）
@@ -237,16 +237,16 @@ personal-resume/
 
 ## 使用场景
 
-### 场景 1：从 JSON 生成简历
+### 场景 1：从 Markdown / Word 文档生成简历
 ```
-用户：帮我用致宋·极简风格生成简历，数据在 my_data.json，烟粉配色
-Claude：[读取 JSON] [运行 generate.py --template zhisong-minimal --color smoke-pink] [输出 HTML]
+用户：帮我用致宋·极简风格生成简历，这是我的 resume.md，烟粉配色
+Claude：[读取文档] [运行 generate.py --template zhisong-minimal --color smoke-pink] [输出 HTML]
 ```
 
 ### 场景 2：口述内容生成简历
 ```
 用户：帮我生成简历，我是张三，在XX公司做工程师，喜欢用致宋留白风格
-Claude：[构建 JSON] [运行 generate.py --template zhisong-breath] [输出 HTML]
+Claude：[整理为 Markdown 简历] [运行 generate.py --template zhisong-breath] [输出 HTML]
 ```
 
 ### 场景 3：更新现有简历 / 换配色
@@ -314,7 +314,7 @@ Claude：明白，教育背景将不展示。现在开始生成简历。
 ## 注意事项
 
 1. **隐私保护**：所有处理在本地完成，不上传任何数据
-2. **输入格式**：支持 `.json` / `.md` / `.docx`，按扩展名自动识别
+2. **输入格式**：支持 `.md` / `.docx`（兼容 `.json`），按扩展名自动识别
 3. **模板/配色**：`--template` 仅接受上表模板名或文件路径；`--color` 接受上表配色名
 4. **中文排版**：日期、章节标题等建议使用中文格式（如"二〇二六年六月"）
 5. **内容精简**：工作经历每段控制在 3-5 条，突出量化成果

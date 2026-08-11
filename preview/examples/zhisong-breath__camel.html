@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>张三 - 个人简历（致宋·留白大气）</title>
+<style>
+  @font-face {
+    font-family: 'LXGW ZhiSong';
+    src: url('assets/fonts/LXGWZhiSongMN.ttf') format('truetype');
+    font-display: swap;
+  }
+  :root {
+    --primary: #E2C17C;
+    --deep: #665738;
+    --soft: #fcf8ef;
+    --line: #f6ecd8;
+    --ink: #3A3532;
+    --muted: #A79B96;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #EFECE9;
+    display: flex; justify-content: center;
+    padding: 24px 12px;
+    font-family: 'LXGW ZhiSong', 'Songti SC', 'STSong', 'SimSun', serif;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm; min-height: 297mm;
+    background: #FFFFFF;
+    padding: 15mm 24mm 10mm;
+    box-shadow: 0 8px 40px rgba(0,0,0,.10);
+    display: flex; flex-direction: column;
+  }
+  /* ---------- 极简头部 ---------- */
+  header { text-align: left; }
+  .monogram { font-size: 11px; letter-spacing: .5em; text-indent: .5em; color: var(--deep); margin-bottom: 8mm; }
+  header h1 { font-size: 44px; font-weight: 400; letter-spacing: .18em; text-indent: .18em; color: var(--ink); line-height: 1.2; }
+  header .en { margin-top: 2.5mm; font-size: 10.5px; letter-spacing: .4em; text-indent: .4em; color: var(--muted); }
+  .divider { width: 100%; height: 1px; background: var(--line); margin: 6mm 0; }
+  .divider.primary { width: 30mm; height: 2px; background: var(--primary); margin: 5mm 0; }
+  .contact { display: flex; gap: 12mm; flex-wrap: wrap; font-size: 10.3px; letter-spacing: .1em; color: var(--muted); }
+  .contact span i { font-style: normal; color: var(--deep); margin-right: 2mm; }
+  /* ---------- 单栏正文 ---------- */
+  .content { flex: 1; margin-top: 2mm; }
+  .sec { margin-bottom: 5mm; }
+  .sec h2 {
+    font-size: 10.8px; font-weight: 400; letter-spacing: .34em; text-indent: .34em;
+    color: var(--primary); margin-bottom: 3mm;
+    display: flex; align-items: center; gap: 4mm;
+  }
+  .sec h2::before { content: ""; width: 4.5mm; height: 4.5mm; border: 1.5px solid var(--primary); transform: rotate(45deg); }
+  .summary { font-size: 10.5px; line-height: 1.7; color: #57504D; text-align: justify; }
+  .experience { margin-bottom: 4mm; }
+  .exp-company { font-size: 12.8px; color: var(--ink); }
+  .exp-date { font-size: 9.3px; color: var(--muted); margin-top: .8mm; letter-spacing: .12em; display: block; }
+  .exp-position { font-size: 10.3px; color: var(--deep); margin-top: .8mm; }
+  .exp-description { margin-top: 1.5mm; }
+  .exp-description ul { list-style: none; }
+  .exp-description li { font-size: 10.2px; line-height: 1.62; color: #5C5652; text-align: justify; }
+  .project { margin-bottom: 3.5mm; }
+  .project-name { font-size: 12.3px; color: var(--ink); }
+  .project-detail { margin-top: 1.2mm; font-size: 10.2px; line-height: 1.62; color: #5C5652; text-align: justify; }
+  .project-detail ul { list-style: none; }
+  .edu { font-size: 10.3px; line-height: 1.7; color: #5C5652; }
+  .edu b { font-weight: 400; color: var(--ink); }
+  .foot { margin-top: auto; padding-top: 6mm; border-top: 1px solid var(--line); font-size: 9px; letter-spacing: .3em; text-indent: .3em; color: var(--muted); text-align: right; }
+  @media print {
+    body { background: none; padding: 0; }
+    .page { box-shadow: none; }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="monogram">RESUME · CV</div>
+      <h1>张 三</h1>
+      <div class="en">Personal Resume</div>
+      <div class="divider primary"></div>
+      <div class="contact">
+        <span><i>电话</i>138 0000 0000</span>
+        <span><i>邮箱</i>zhangsan@example.com</span>
+        <span><i>坐标</i>上海市</span>
+      </div>
+    </header>
+
+    <div class="divider"></div>
+
+    <div class="content">
+      <section class="sec">
+        <h2>个人简介</h2>
+        <p class="summary">生物工艺方向资深工程师，深耕 mRNA 疫苗与重组蛋白的工艺开发与放大生产。善于把复杂的下游工艺做扎实，重视数据驱动的决策与跨团队协作，主导交付多个从实验室走向临床批量的项目。</p>
+      </section>
+
+      <section class="sec">
+        <h2>工作经历</h2>
+        <div class="experience">
+    <div class="exp-header"><span class="exp-company">某生物技术有限公司</span></div>
+    <span class="exp-date">二〇二三年八月至今</span>
+    <p class="exp-position">工艺开发工程师（mRNA疫苗方向）</p>
+    <div class="exp-description"><ul>
+                <li>负责mRNA疫苗的质粒模板生产和下游微流控包封、超滤纯化、无菌过滤和无菌灌装等工艺</li>
+                <li>负责工艺文件起草，包括工艺操作规程SOP、仪器设备URS及操作规程</li>
+                <li>部门物料管理，独立开发局域网ERP系统，实现批次生产物料溯源</li>
+                <li>独立运营行业垂类公众号，粉丝3000余</li>
+        </ul></div>
+</div>
+
+<div class="experience">
+    <div class="exp-header"><span class="exp-company">某生物技术有限公司</span></div>
+    <span class="exp-date">二〇二一年五月至二〇二三年八月</span>
+    <p class="exp-position">纯化工程师（质粒/慢病毒）</p>
+    <div class="exp-description"><ul>
+                <li>负责细胞治疗项目下游纯化工艺中GMP级别质粒和慢病毒的生产</li>
+                <li>负责并参与下游工艺仪器设备的URS撰写及3Q验证</li>
+                <li>参与mRNA-LNP实验级工艺开发及制备，负责mRNA转录后纯化及包封工艺</li>
+        </ul></div>
+</div>
+
+<div class="experience">
+    <div class="exp-header"><span class="exp-company">某医药科技有限公司</span></div>
+    <span class="exp-date">二〇一九年七月至二〇二一年五月</span>
+    <p class="exp-position">分子生物工程师</p>
+    <div class="exp-description"><ul>
+                <li>负责病毒类亚单位重组蛋白的构建及外源表达</li>
+                <li>以大肠杆菌及毕赤酵母为表达宿主，进行外源重组蛋白表达优化及发酵生产（10L/30L）</li>
+                <li>负责重组蛋白下游纯化工艺及量产，按时完成客户单月1KG重组蛋白产量</li>
+        </ul></div>
+</div>
+      </section>
+
+      <section class="sec">
+        <h2>项目经历</h2>
+        <div class="project">
+    <p class="project-name">病毒Fiber重组蛋白表达</p>
+    <div class="project-detail"><ul>
+                <li>利用截短后目的基因插入pET系列载体，获得高表达可溶性蛋白</li>
+                <li>经NI-NTA纯化后获得纯度90%以上的目的蛋白，含量约2g/L</li>
+        </ul></div>
+</div>
+
+<div class="project">
+    <p class="project-name">长效因子原核表达</p>
+    <div class="project-detail"><ul>
+                <li>应用pET/pGEX载体，通过融合标签蛋白（His、Trx、Sumo、GST）提高溶解度和表达量</li>
+                <li>通过融合GST标签获得过表达包涵体蛋白，经亲和层析复性获得活性蛋白</li>
+        </ul></div>
+</div>
+      </section>
+
+      <section class="sec">
+        <h2>教育背景</h2>
+        <div class="edu">
+          <b>示例大学（985院校）</b> · 生物工程 · 本科及学硕 · 2013.09 - 2020.07
+        </div>
+      </section>
+    </div>
+
+    <div class="foot">把复杂工艺拆成可落地的流程，把每一步做到可复现、可追溯。乐于分享与协作，对新技术保持好奇。</div>
+  </div>
+</body>
+</html>

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-个人简历生成器（JSON / Markdown / Word → HTML）
+个人简历生成器（Markdown / Word → HTML，兼容 JSON）
 
 支持「楷体雅致」与「霞鹜致宋」系列多套模板，可切换 12 种主题配色。
-输入支持 JSON（.json）、Markdown（.md）与 Word（.docx）三种格式。
+输入支持 Markdown（.md）与 Word（.docx）简历文档，兼容 JSON（.json）。
 
 用法：
     python generate.py <简历文件路径> [--output <输出路径>] [--template <模板名或路径>] [--color <配色名>]
@@ -25,8 +25,8 @@
     也接受中文名（如 --color 烟粉）。
 
 示例：
-    python generate.py ../examples/wushengjun.json
-    python generate.py ../examples/wushengjun.json --template zhisong-sidebar --color smoke-pink
+    python generate.py ../examples/resume.md
+    python generate.py ../examples/resume.md --template zhisong-sidebar --color smoke-pink
 """
 
 import json
@@ -110,7 +110,7 @@ def derive_palette(primary):
 
 
 def load_json(json_path):
-    """加载 JSON 简历数据"""
+    """加载简历数据"""
     with open(json_path, 'r', encoding='utf-8') as f:
         return json.load(f)
 
@@ -359,7 +359,7 @@ def read_docx_text(docx_path):
 
 
 def load_data(input_path):
-    """按扩展名加载简历数据：.json / .md / .markdown / .docx"""
+    """按扩展名加载简历数据：.md / .markdown / .docx / .json"""
     ext = os.path.splitext(input_path)[1].lower()
     if ext == '.json':
         with open(input_path, 'r', encoding='utf-8') as f:
@@ -616,8 +616,8 @@ def copy_font_if_exists(skill_dir, output_path):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='个人简历生成器（JSON / Markdown / Word → HTML）')
-    parser.add_argument('input_file', help='简历数据文件路径（支持 .json / .md / .docx）')
+    parser = argparse.ArgumentParser(description='个人简历生成器（Markdown / Word → HTML，兼容 JSON）')
+    parser.add_argument('input_file', help='简历数据文件路径（支持 .md / .docx，兼容 .json）')
     parser.add_argument('--output', '-o', help='输出 HTML 文件路径（默认与输入文件同目录）')
     parser.add_argument(
         '--template', '-t',

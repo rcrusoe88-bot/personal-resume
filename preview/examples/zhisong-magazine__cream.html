@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>张三 - 个人简历（致宋·杂志版面）</title>
+<style>
+  @font-face {
+    font-family: 'LXGW ZhiSong';
+    src: url('assets/fonts/LXGWZhiSongMN.ttf') format('truetype');
+    font-display: swap;
+  }
+  :root {
+    --primary: #FFF8E7;
+    --deep: #737068;
+    --soft: #fffefc;
+    --line: #fffdf8;
+    --ink: #322D2B;
+    --muted: #988C87;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #E9E5E2;
+    display: flex; justify-content: center;
+    padding: 24px 12px;
+    font-family: 'LXGW ZhiSong', 'Songti SC', 'STSong', 'SimSun', serif;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm; min-height: 297mm;
+    background: #FFFFFF;
+    box-shadow: 0 8px 40px rgba(0,0,0,.12);
+    display: flex; flex-direction: column;
+  }
+  /* ---------- 杂志大标题区 ---------- */
+  .masthead {
+    padding: 12mm 15mm 6mm;
+    border-bottom: 2px solid var(--primary);
+  }
+  .masthead .kicker { font-size: 9px; letter-spacing: .5em; text-indent: .5em; color: var(--deep); }
+  .masthead h1 { font-size: 52px; font-weight: 400; letter-spacing: .1em; text-indent: .1em; color: var(--ink); line-height: 1.15; margin: 2mm 0 1mm; }
+  .masthead .tagline { display: flex; justify-content: space-between; align-items: baseline; font-size: 11px; color: var(--muted); letter-spacing: .14em; }
+  .masthead .tagline i { font-style: normal; color: var(--deep); }
+  /* ---------- 双栏 ---------- */
+  .cols { flex: 1; display: flex; }
+  .col { flex: 1; padding: 8mm 10mm; }
+  .col + .col { border-left: 1px solid var(--line); }
+  .sec { margin-bottom: 6mm; }
+  .sec h2 {
+    display: flex; align-items: baseline; gap: 3mm;
+    font-size: 13px; font-weight: 400; letter-spacing: .2em;
+    color: var(--ink); padding-bottom: 2mm; margin-bottom: 3.5mm;
+    border-bottom: 1px solid var(--line);
+  }
+  .sec h2 .no { font-size: 15px; color: var(--primary); letter-spacing: 0; }
+  .summary { font-size: 10.6px; line-height: 1.7; color: #58514E; text-align: justify; }
+  .experience { margin-bottom: 4mm; }
+  .exp-header { display: flex; justify-content: space-between; align-items: baseline; }
+  .exp-company { font-size: 12.5px; color: var(--ink); }
+  .exp-date { font-size: 9.5px; color: var(--deep); letter-spacing: .05em; }
+  .exp-position { font-size: 10.1px; color: var(--muted); margin: .6mm 0 1.2mm; }
+  .exp-description ul { padding-left: 4.5mm; }
+  .exp-description li { font-size: 10px; line-height: 1.6; color: #5D5652; text-align: justify; }
+  .exp-description li::marker { color: var(--primary); }
+  .project { margin-bottom: 2.8mm; padding: 2.2mm 3.5mm; background: var(--soft); border-left: 3px solid var(--primary); }
+  .project-name { font-size: 11.5px; color: var(--ink); margin-bottom: 1mm; }
+  .project-detail { font-size: 10px; color: #5D5652; line-height: 1.7; text-align: justify; }
+  .project-detail ul { padding-left: 4mm; }
+  .project-detail li::marker { color: var(--primary); }
+  .edu { font-size: 10.5px; line-height: 1.8; color: #5D5652; }
+  .edu b { font-weight: 400; color: var(--ink); }
+  .skill-tag {
+    display: inline-block; font-size: 9.5px; letter-spacing: .08em;
+    color: var(--deep); border: 1px solid var(--primary);
+    padding: 1mm 2.6mm; border-radius: 2px; margin: 0 1mm 2mm 0;
+  }
+  .honor-tag { display: block; font-size: 10.4px; color: #5D5652; line-height: 1.9; }
+  .honor-tag::before { content: "◆ "; color: var(--primary); font-size: 8px; }
+  .highlight-item {
+    border-left: 2.5px solid var(--primary); padding-left: 4mm;
+    margin-bottom: 3mm;
+  }
+  .highlight-label { font-size: 9.5px; color: var(--muted); letter-spacing: .08em; margin-bottom: .8mm; }
+  .highlight-value { font-size: 11px; color: var(--ink); }
+  .self { font-size: 10.5px; line-height: 1.85; color: #6A615D; border-left: 2.5px solid var(--primary); padding-left: 4mm; text-align: justify; }
+  @media print {
+    body { background: none; padding: 0; }
+    .page { box-shadow: none; }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="masthead">
+      <div class="kicker">RESUME · PORTFOLIO</div>
+      <h1>张 三</h1>
+      <div class="tagline">
+        <i>PERSONAL RESUME</i>
+        <span>138 0000 0000 · zhangsan@example.com · 上海市</span>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div class="col">
+        <section class="sec">
+          <h2><span class="no">01</span> 个人简介</h2>
+          <p class="summary">生物工艺方向资深工程师，深耕 mRNA 疫苗与重组蛋白的工艺开发与放大生产。善于把复杂的下游工艺做扎实，重视数据驱动的决策与跨团队协作，主导交付多个从实验室走向临床批量的项目。</p>
+        </section>
+
+        <section class="sec">
+          <h2><span class="no">02</span> 工作经历</h2>
+          <div class="experience">
+    <div class="exp-header"><span class="exp-company">某生物技术有限公司</span></div>
+    <span class="exp-date">二〇二三年八月至今</span>
+    <p class="exp-position">工艺开发工程师（mRNA疫苗方向）</p>
+    <div class="exp-description"><ul>
+                <li>负责mRNA疫苗的质粒模板生产和下游微流控包封、超滤纯化、无菌过滤和无菌灌装等工艺</li>
+                <li>负责工艺文件起草，包括工艺操作规程SOP、仪器设备URS及操作规程</li>
+                <li>部门物料管理，独立开发局域网ERP系统，实现批次生产物料溯源</li>
+                <li>独立运营行业垂类公众号，粉丝3000余</li>
+        </ul></div>
+</div>
+
+<div class="experience">
+    <div class="exp-header"><span class="exp-company">某生物技术有限公司</span></div>
+    <span class="exp-date">二〇二一年五月至二〇二三年八月</span>
+    <p class="exp-position">纯化工程师（质粒/慢病毒）</p>
+    <div class="exp-description"><ul>
+                <li>负责细胞治疗项目下游纯化工艺中GMP级别质粒和慢病毒的生产</li>
+                <li>负责并参与下游工艺仪器设备的URS撰写及3Q验证</li>
+                <li>参与mRNA-LNP实验级工艺开发及制备，负责mRNA转录后纯化及包封工艺</li>
+        </ul></div>
+</div>
+
+<div class="experience">
+    <div class="exp-header"><span class="exp-company">某医药科技有限公司</span></div>
+    <span class="exp-date">二〇一九年七月至二〇二一年五月</span>
+    <p class="exp-position">分子生物工程师</p>
+    <div class="exp-description"><ul>
+                <li>负责病毒类亚单位重组蛋白的构建及外源表达</li>
+                <li>以大肠杆菌及毕赤酵母为表达宿主，进行外源重组蛋白表达优化及发酵生产（10L/30L）</li>
+                <li>负责重组蛋白下游纯化工艺及量产，按时完成客户单月1KG重组蛋白产量</li>
+        </ul></div>
+</div>
+        </section>
+
+        <section class="sec">
+          <h2><span class="no">03</span> 项目经历</h2>
+          <div class="project">
+    <p class="project-name">病毒Fiber重组蛋白表达</p>
+    <div class="project-detail"><ul>
+                <li>利用截短后目的基因插入pET系列载体，获得高表达可溶性蛋白</li>
+                <li>经NI-NTA纯化后获得纯度90%以上的目的蛋白，含量约2g/L</li>
+        </ul></div>
+</div>
+
+<div class="project">
+    <p class="project-name">长效因子原核表达</p>
+    <div class="project-detail"><ul>
+                <li>应用pET/pGEX载体，通过融合标签蛋白（His、Trx、Sumo、GST）提高溶解度和表达量</li>
+                <li>通过融合GST标签获得过表达包涵体蛋白，经亲和层析复性获得活性蛋白</li>
+        </ul></div>
+</div>
+        </section>
+      </div>
+
+      <div class="col">
+        <section class="sec">
+          <h2><span class="no">04</span> 教育背景</h2>
+          <div class="edu">
+            <b>示例大学（985院校）</b> · 生物工程 · 本科及学硕<br>
+            2013.09 - 2020.07<br>
+            <span style="color:var(--muted)">研究方向：重组蛋白表达与下游纯化工艺</span>
+          </div>
+        </section>
+
+        <section class="sec">
+          <h2><span class="no">05</span> 专业技能</h2>
+                          <span class="skill-tag">mRNA工艺开发</span>
+                <span class="skill-tag">蛋白纯化</span>
+                <span class="skill-tag">GMP生产</span>
+                <span class="skill-tag">质粒生产</span>
+                <span class="skill-tag">慢病毒制备</span>
+                <span class="skill-tag">细胞治疗工艺</span>
+                <span class="skill-tag">原核/真核表达</span>
+                <span class="skill-tag">发酵工艺</span>
+                <span class="skill-tag">层析纯化</span>
+                <span class="skill-tag">设备验证</span>
+                <span class="skill-tag">SOP编写</span>
+                <span class="skill-tag">ERP开发</span>
+        </section>
+
+        <section class="sec">
+          <h2><span class="no">06</span> 荣誉证书</h2>
+                          <span class="honor-tag">mRNA工艺开发能手</span>
+                <span class="honor-tag">年度优秀员工</span>
+                <span class="honor-tag">内部技术分享之星</span>
+        </section>
+
+        <section class="sec">
+          <h2><span class="no">07</span> 个人亮点</h2>
+          <div class="highlight-item">
+    <p class="highlight-label">公众号运营</p>
+    <p class="highlight-value">行业垂类公众号 3000+ 粉丝</p>
+</div>
+
+<div class="highlight-item">
+    <p class="highlight-label">技术开发</p>
+    <p class="highlight-value">独立开发局域网ERP系统</p>
+</div>
+
+<div class="highlight-item">
+    <p class="highlight-label">生产规模</p>
+    <p class="highlight-value">单月1KG重组蛋白量产</p>
+</div>
+
+<div class="highlight-item">
+    <p class="highlight-label">GMP经验</p>
+    <p class="highlight-value">质粒/慢病毒制备下游工艺</p>
+</div>
+        </section>
+
+        <section class="sec">
+          <h2><span class="no">08</span> 一句话自评</h2>
+          <p class="self">把复杂工艺拆成可落地的流程，把每一步做到可复现、可追溯。乐于分享与协作，对新技术保持好奇。</p>
+        </section>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

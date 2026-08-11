@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>简历模板与配色 · 交互式预览</title>
+<style>
+  :root {
+    --ink: #3a3532;
+    --muted: #9a8f8a;
+    --line: #e5d9d5;
+    --primary: #894e54;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Songti SC', 'STSong', 'SimSun', 'Microsoft YaHei', serif;
+    color: var(--ink);
+    background: #f2efec;
+    padding: 32px 20px 60px;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 28px; }
+  header h1 { font-size: 26px; font-weight: 400; letter-spacing: .12em; }
+  header p { margin-top: 8px; font-size: 13px; color: var(--muted); }
+  /* 模板选择 */
+  .tpl-bar {
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+    margin-bottom: 18px;
+  }
+  .tpl-btn {
+    border: 1px solid var(--line); background: #fff; color: var(--ink);
+    padding: 7px 16px; border-radius: 6px; cursor: pointer;
+    font-size: 13px; font-family: inherit;
+  }
+  .tpl-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+  /* 配色选择 */
+  .color-bar { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 20px; }
+  .swatch {
+    display: flex; align-items: center; gap: 6px;
+    border: 1px solid var(--line); background: #fff;
+    padding: 5px 10px 5px 6px; border-radius: 20px; cursor: pointer;
+    font-size: 12px; color: var(--ink); font-family: inherit;
+  }
+  .swatch i { width: 18px; height: 18px; border-radius: 50%; border: 1px solid rgba(0,0,0,.12); }
+  .swatch.active { outline: 2px solid var(--primary); outline-offset: 1px; }
+  .swatch.disabled { opacity: .4; cursor: not-allowed; }
+  /* 预览 iframe */
+  .preview-wrap {
+    display: flex; justify-content: center;
+  }
+  .preview-wrap iframe {
+    width: 794px; height: 1123px; max-width: 100%;
+    border: 1px solid var(--line); border-radius: 4px;
+    background: #fff; box-shadow: 0 6px 24px rgba(0,0,0,.10);
+  }
+  .tip { text-align: center; margin-top: 16px; font-size: 12px; color: var(--muted); }
+  .tip a { color: var(--primary); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>简历模板与配色 · 交互式预览</h1>
+      <p>8 套模板 × 12 种配色（示例数据：张三 · 生物工艺方向），点击切换即可实时预览</p>
+    </header>
+
+    <div class="tpl-bar" id="tplBar"></div>
+    <div class="color-bar" id="colorBar"></div>
+
+    <div class="preview-wrap">
+      <iframe id="frame" title="简历预览" loading="lazy"></iframe>
+    </div>
+
+    <div class="tip">
+      预览使用示例数据生成，完整内容请在仓库根目录运行：
+      <code>python scripts/generate.py examples/resume.md --template zhisong-sidebar --color 烟粉</code>
+    </div>
+  </div>
+
+  <script>
+    const TEMPLATES = [
+      { id: 'kaiti-elegant', name: '楷体雅致' },
+      { id: 'zhisong-sidebar', name: '致宋·经典左右分栏' },
+      { id: 'zhisong-minimal', name: '致宋·极简居中' },
+      { id: 'zhisong-timeline', name: '致宋·叙事时间线' },
+      { id: 'zhisong-magazine', name: '致宋·杂志版面' },
+      { id: 'zhisong-cards', name: '致宋·圆角卡片' },
+      { id: 'zhisong-handbook', name: '致宋·文创手账' },
+      { id: 'zhisong-breath', name: '致宋·留白大气' },
+    ];
+    const COLORS = [
+      { id: 'red-brown', name: '红棕', hex: '#894E54' },
+      { id: 'smoke-pink', name: '烟粉', hex: '#E4B5C4' },
+      { id: 'willow', name: '柳黄', hex: '#C9E079' },
+      { id: 'camel', name: '浅驼色', hex: '#E2C17C' },
+      { id: 'cloud-white', name: '云峰白', hex: '#D8E3E7' },
+      { id: 'autumn-blue', name: '秋波蓝', hex: '#8ABCD1' },
+      { id: 'olive', name: '橄榄黄绿', hex: '#BEC936' },
+      { id: 'pearl', name: '珍珠灰', hex: '#E4DFD7' },
+      { id: 'almond', name: '杏仁黄', hex: '#F7E8AA' },
+      { id: 'cream', name: '奶油白', hex: '#FFF8E7' },
+      { id: 'pineapple-red', name: '菠萝红', hex: '#FC7930' },
+      { id: 'begonia', name: '海棠', hex: '#FF6F61' },
+    ];
+
+    let curT = 'kaiti-elegant';
+    let curC = 'red-brown';
+    const frame = document.getElementById('frame');
+
+    function render() {
+      const src = curT === 'kaiti-elegant'
+        ? 'examples/kaiti-elegant.html'
+        : 'examples/' + curT + '__' + curC + '.html';
+      frame.src = src;
+      document.querySelectorAll('.tpl-btn').forEach(b =>
+        b.classList.toggle('active', b.dataset.id === curT));
+      document.querySelectorAll('.swatch').forEach(s => {
+        s.classList.toggle('active', s.dataset.id === curC);
+        s.classList.toggle('disabled', curT === 'kaiti-elegant');
+      });
+    }
+
+    const tplBar = document.getElementById('tplBar');
+    TEMPLATES.forEach(t => {
+      const b = document.createElement('button');
+      b.className = 'tpl-btn';
+      b.dataset.id = t.id;
+      b.textContent = t.name;
+      b.onclick = () => { curT = t.id; render(); };
+      tplBar.appendChild(b);
+    });
+
+    const colorBar = document.getElementById('colorBar');
+    COLORS.forEach(c => {
+      const s = document.createElement('button');
+      s.className = 'swatch';
+      s.dataset.id = c.id;
+      s.innerHTML = '<i style="background:' + c.hex + '"></i>' + c.name;
+      s.onclick = () => { curC = c.id; render(); };
+      colorBar.appendChild(s);
+    });
+
+    render();
+  </script>
+</body>
+</html>
