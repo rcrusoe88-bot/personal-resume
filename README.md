@@ -54,10 +54,9 @@ python scripts/generate.py data.json --template templates/kaiti-elegant.html
 ## 字体说明
 
 - **楷体雅致**：使用系统楷体（STKaiti / KaiTi），无需额外文件；
-- **霞鹜致宋**：使用霞鹜致宋字体 `LXGWZhiSongMN.ttf`（约 8.7MB），不随仓库分发。
-  首次使用请从 [LxgwZhiSong Releases](https://github.com/lxgw/LxgwZhiSong/releases) 下载，
-  放置到 skill 的 `assets/fonts/` 目录；生成时脚本自动复制到输出目录。
-  缺失时回退系统宋体，仍可正常使用。
+- **霞鹜致宋**：使用霞鹜致宋字体 `LXGWZhiSongMN.ttf`（约 8.7MB），已随仓库分发于
+  `assets/fonts/` 目录，clone 后开箱即用；生成时脚本自动复制到输出目录。
+  缺失（或使用不带字体的旧副本）时回退系统宋体，仍可正常使用。
 
 ## JSON 数据格式
 

@@ -156,9 +156,10 @@ personal-resume/
 
 ## 字体说明（霞鹜致宋模板）
 
-- 致宋系列模板使用霞鹜致宋字体 `LXGWZhiSongMN.ttf`（约 8.7MB，单文件，不随仓库分发）；
-- 首次使用前请从 https://github.com/lxgw/LxgwZhiSong/releases 下载，
-  放置到 skill 的 `assets/fonts/LXGWZhiSongMN.ttf`；
+- 致宋系列模板使用霞鹜致宋字体 `LXGWZhiSongMN.ttf`（约 8.7MB，单文件），
+  已随仓库分发于 `assets/fonts/LXGWZhiSongMN.ttf`，clone 仓库即自带，开箱即用；
+- 若使用不带字体的旧副本，可从 https://github.com/rcrusoe88-bot/personal-resume 或
+  https://github.com/lxgw/LxgwZhiSong/releases 获取字体放入 `assets/fonts/`；
 - 生成时脚本会自动把字体复制到输出目录的 `assets/fonts/`；
 - 若字体缺失，模板回退到系统宋体，仍可正常使用。
 

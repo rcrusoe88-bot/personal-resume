@@ -53,8 +53,7 @@
 font-family: 'LXGW ZhiSong', 'Songti SC', 'STSong', 'SimSun', serif;
 ```
 
-- 字体文件 `LXGWZhiSongMN.ttf`（约 8.7MB）不随仓库分发，需从
-  https://github.com/lxgw/LxgwZhiSong/releases 下载后放置于 skill 的 `assets/fonts/` 目录；
+- 字体文件 `LXGWZhiSongMN.ttf`（约 8.7MB）已随仓库分发于 `assets/fonts/` 目录，clone 即自带；
 - `generate.py` 生成简历时会把字体复制到输出目录的 `assets/fonts/`；
 - 字体缺失时回退到系统宋体（`Songti SC` / `SimSun`），模板仍可用。
 - 中文字体为单字重（Regular），标题层级通过字号、字距与颜色区分，不使用合成加粗。
