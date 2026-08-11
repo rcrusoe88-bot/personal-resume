@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api/pin/?username=rcrusoe88-bot&repo=personal-resume&theme=vue&show_owner=true" alt="personal-resume 仓库数据">
+  <img src="https://github-readme-stats-eight-theta.vercel.app/api/pin/?username=rcrusoe88-bot&repo=personal-resume&theme=vue&show_owner=true" alt="personal-resume 仓库数据">
 </p>
 
 > 一个基于「楷体雅致」视觉系统的个人简历生成器 Skill。输入结构化 JSON 数据，一键生成可直接在浏览器预览、截图或打印为 PDF 的 A4 尺寸 HTML 简历。
@@ -110,6 +110,6 @@ personal-resume/
 ## 📊 作者 GitHub 数据
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=rcrusoe88-bot&show_icons=true&theme=vue" alt="rcrusoe88-bot 的 GitHub 统计">
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=rcrusoe88-bot&layout=compact&theme=vue" alt="rcrusoe88-bot 的常用语言">
+  <img src="https://github-readme-stats-eight-theta.vercel.app/api?username=rcrusoe88-bot&show_icons=true&theme=vue" alt="rcrusoe88-bot 的 GitHub 统计">
+  <img src="https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=rcrusoe88-bot&layout=compact&theme=vue" alt="rcrusoe88-bot 的常用语言">
 </p>
