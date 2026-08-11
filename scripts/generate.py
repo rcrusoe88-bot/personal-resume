@@ -380,11 +380,11 @@ REQUIRED_SECTIONS = [
     ('education', '教育背景'),
     ('experiences', '工作经历'),
     ('skills', '专业技能'),
+    ('contact', '联系方式'),
+    ('projects', '项目经历'),
 ]
 
 OPTIONAL_SECTIONS = [
-    ('contact', '联系方式'),
-    ('projects', '项目经历'),
     ('honors', '荣誉证书'),
     ('highlights', '个人亮点'),
     ('self_evaluation', '自我评价'),
