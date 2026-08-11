@@ -1,8 +1,8 @@
 ---
 name: personal-resume
 description: >
-  个人简历生成器，从 JSON 数据生成 A4 尺寸的 HTML 简历。支持「楷体雅致」与
-  「霞鹜致宋」共 8 套模板，以及 12 种主题配色（红棕/烟粉/柳黄/秋波蓝等）。
+  个人简历生成器，从 JSON / Markdown / Word（.docx）数据生成 A4 尺寸的 HTML 简历。
+  支持「楷体雅致」与「霞鹜致宋」共 8 套模板，以及 12 种主题配色（红棕/烟粉/柳黄/秋波蓝等）。
   支持自定义姓名、联系方式、个人简介、教育背景、工作经历、项目经验、技能标签、
   荣誉证书和个人亮点。务必在以下场景使用：用户说"个人简历""生成简历""简历模板"
   "楷体""kaiti""致宋""霞鹜""zhisong""personal resume"；或用户需要生成或更新
@@ -35,10 +35,15 @@ description: >
 - "personal-resume generate data.json --template zhisong-sidebar --color 烟粉"
 
 **执行流程：**
-1. 读取用户提供的 JSON 简历数据文件（或用户口述内容自行构建 JSON）
+1. 读取用户提供的简历文件（支持 `.json` / `.md` / `.docx`，或用户口述内容自行构建）
 2. 确定模板（`--template`，默认楷体雅致）与配色（`--color`，默认红棕）
 3. 运行 `scripts/generate.py` 填充模板
 4. 输出完整 HTML 文件（含字体复制）
+
+**输入格式说明：**
+- **JSON**（.json）：最完整，字段见下方 JSON 数据格式；
+- **Markdown**（.md）：按标题分节，见下方 Markdown 简历格式；
+- **Word**（.docx）：直接读取正文，按标题/段落识别，无需安装 python-docx。
 
 ### 模板一览（--template）
 
@@ -111,9 +116,56 @@ pineapple-red 菠萝红 / begonia 海棠`（中英文名均可）
 > `contact`、`summary`、`honors`、`self_evaluation` 为可选字段，缺失时对应区域留空；
 > 旧版 JSON（无上述字段）同样兼容。
 
+**Markdown 简历格式（.md）：**
+
+Markdown 输入按标题分节，列表项作条目，`·` 分隔公司/职位/时间。示例：
+
+```markdown
+# 张三
+
+电话：138 0000 0000
+邮箱：zhangsan@example.com
+城市：上海市
+
+## 个人简介
+生物工艺方向资深工程师，深耕 mRNA 疫苗工艺开发。
+
+## 教育背景
+示例大学（985院校） · 2013.09 - 2020.07 · 生物工程 · 本科及学硕
+
+## 工作经历
+### 某生物技术有限公司 · 工艺开发工程师（mRNA疫苗方向） · 2023.08至今
+- 负责mRNA疫苗的质粒模板生产和下游纯化工艺
+- 负责工艺文件起草，包括工艺操作规程SOP
+
+### 某医药科技有限公司 · 分子生物工程师 · 2019.07-2021.05
+- 负责病毒类亚单位重组蛋白的构建及外源表达
+
+## 项目经历
+### 病毒Fiber重组蛋白表达
+- 利用截短后目的基因插入pET系列载体
+- 经NI-NTA纯化后获得纯度90%以上的目的蛋白
+
+## 专业技能
+- mRNA工艺开发
+- 蛋白纯化
+
+## 荣誉证书
+- mRNA工艺开发能手
+
+## 个人亮点
+- 公众号运营：行业垂类公众号 3000+ 粉丝
+
+## 自我评价
+把复杂工艺拆成可落地的流程。
+```
+
+支持的分节标题：个人简介 / 教育背景 / 工作经历 / 项目经历 / 专业技能 / 荣誉证书 / 个人亮点 / 自我评价。
+Word 文档（.docx）以同样方式识别段落与标题（无需 Markdown 标记）。
+
 **命令行用法：**
 ```bash
-python scripts/generate.py <json文件> [--output <输出路径>] [--template <模板名>] [--color <配色名>]
+python scripts/generate.py <简历文件> [--output <输出路径>] [--template <模板名>] [--color <配色名>]
 ```
 
 **示例：**
@@ -123,6 +175,12 @@ python scripts/generate.py examples/wushengjun.json
 
 # 致宋 · 经典左右分栏 + 烟粉配色
 python scripts/generate.py examples/wushengjun.json --template zhisong-sidebar --color smoke-pink
+
+# 从 Markdown 简历生成（致宋 · 极简 + 秋波蓝）
+python scripts/generate.py examples/resume.md --template zhisong-minimal --color autumn-blue
+
+# 从 Word 简历生成（致宋 · 留白）
+python scripts/generate.py my_resume.docx --template zhisong-breath
 
 # 致宋 · 圆角卡片 + 秋波蓝，指定输出
 python scripts/generate.py data.json --template zhisong-cards --color 秋波蓝 --output my_resume.html
@@ -199,7 +257,8 @@ Claude：[重跑 generate.py --color autumn-blue] [输出新 HTML]
 ## 注意事项
 
 1. **隐私保护**：所有处理在本地完成，不上传任何数据
-2. **模板/配色**：`--template` 仅接受上表模板名或文件路径；`--color` 接受上表配色名
-3. **中文排版**：日期、章节标题等建议使用中文格式（如"二〇二六年六月"）
-4. **内容精简**：工作经历每段控制在 3-5 条，突出量化成果
-5. **单页约束**：致宋模板已针对常规数据压缩为 A4 单页；数据特别多时可适当精简内容
+2. **输入格式**：支持 `.json` / `.md` / `.docx`，按扩展名自动识别
+3. **模板/配色**：`--template` 仅接受上表模板名或文件路径；`--color` 接受上表配色名
+4. **中文排版**：日期、章节标题等建议使用中文格式（如"二〇二六年六月"）
+5. **内容精简**：工作经历每段控制在 3-5 条，突出量化成果
+6. **单页约束**：致宋模板已针对常规数据压缩为 A4 单页；数据特别多时可适当精简内容

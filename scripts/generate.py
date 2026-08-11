@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-个人简历生成器（JSON → HTML）
+个人简历生成器（JSON / Markdown / Word → HTML）
 
 支持「楷体雅致」与「霞鹜致宋」系列多套模板，可切换 12 种主题配色。
+输入支持 JSON（.json）、Markdown（.md）与 Word（.docx）三种格式。
 
 用法：
-    python generate.py <json文件路径> [--output <输出路径>] [--template <模板名或路径>] [--color <配色名>]
+    python generate.py <简历文件路径> [--output <输出路径>] [--template <模板名或路径>] [--color <配色名>]
 
 模板名（--template）：
     kaiti-elegant      楷体雅致（默认）
@@ -34,6 +35,8 @@ import sys
 import shutil
 import re
 import argparse
+import zipfile
+from xml.etree import ElementTree as ET
 
 
 # ---------------------------------------------------------------- 模板注册表
@@ -116,6 +119,259 @@ def load_template(template_path):
     """加载 HTML 模板"""
     with open(template_path, 'r', encoding='utf-8') as f:
         return f.read()
+
+
+# ---------------------------------------------------------------- 多格式输入解析
+# 分节标题关键词：字段 key -> 常见标题写法
+SECTION_KEYWORDS = [
+    ('summary',         ['个人简介', '简介', '关于我', '个人概述', 'summary']),
+    ('education',       ['教育背景', '教育经历', '教育', 'education']),
+    ('experiences',     ['工作经历', '职业经历', '工作履历', '职业履历', '履历', 'experience']),
+    ('projects',        ['项目经历', '项目经验', '代表项目', '项目', 'project']),
+    ('skills',          ['专业技能', '技能', '技术栈', 'skills']),
+    ('honors',          ['荣誉证书', '荣誉', '获奖', '奖项', 'honors']),
+    ('highlights',      ['个人亮点', '亮点', 'highlight']),
+    ('self_evaluation', ['自我评价', '自评', '个人评价']),
+]
+
+DATE_RE = re.compile(r'(\d{4}[\s年./\-]\d{0,2}[\s月./\-]?\d{0,2}|至今|现在|二[〇零一二三四五六七八九]{3}年)')
+
+
+def match_section(line):
+    """判断一行是否为分节标题，返回字段 key 或 None"""
+    line = line.strip().strip('#').strip()
+    for key, keywords in SECTION_KEYWORDS:
+        for kw in keywords:
+            if line == kw or line.startswith(kw):
+                return key
+    return None
+
+
+def parse_contact_line(line):
+    """从一行文本提取联系方式字段，返回 dict 或 None"""
+    contact = {}
+    m = re.search(r'(?:电话|手机|手机号|联系方式)[:：]?\s*([0-9+\- ]{7,16})', line)
+    if m:
+        contact['phone'] = m.group(1).strip()
+    m = re.search(r'[\w.+-]+@[\w-]+(?:\.[\w-]+)+', line)
+    if m:
+        contact['email'] = m.group(0)
+    m = re.search(r'(?:主页|网站|GitHub|github)[:：]?\s*([a-zA-Z0-9][a-zA-Z0-9./:_-]{2,})', line)
+    if m:
+        contact['website'] = m.group(1).strip()
+    m = re.search(r'(?:城市|坐标|所在地|现居|地址)[:：]?\s*([一-龥]{2,10})', line)
+    if m:
+        contact['city'] = m.group(1).strip()
+    return contact or None
+
+
+def parse_exp_title(line):
+    """解析工作经历子标题：公司 · 职位 · 时间"""
+    exp = {'company': line, 'date': '', 'position': '', 'description': []}
+    parts = [p.strip() for p in re.split(r'[·|｜,，、/]', line) if p.strip()]
+    if len(parts) >= 2:
+        exp['company'] = parts[0]
+        date_idx = None
+        for i, p in enumerate(parts):
+            if i > 0 and DATE_RE.search(p):
+                exp['date'] = p
+                date_idx = i
+                break
+        rest = [p for i, p in enumerate(parts) if i > 0 and i != date_idx]
+        exp['position'] = ' · '.join(rest)
+    return exp
+
+
+DESC_VERBS = ('负责', '参与', '主导', '开发', '设计', '搭建', '完成', '推动', '制定',
+              '组织', '协调', '优化', '实现', '落地', '编写', '维护', '支持', '协助',
+              '整理', '运营', '管理', '部署', '迭代', '跟进', '处理', '独立', '规划',
+              '统筹', '对接', '探索', '分析', '改进', '重构')
+
+
+def looks_like_description(line):
+    """判断纯文本行是否更像工作/项目描述而非新条目标题（docx 无 bullet 标记时使用）"""
+    if DATE_RE.search(line):
+        return False
+    if re.search(r'[·|｜,，、/]', line):
+        return False
+    return line.startswith(DESC_VERBS)
+
+
+def parse_proj_title(line):
+    """解析项目子标题：项目名（· 时间）"""
+    parts = [p.strip() for p in re.split(r'[·|]', line) if p.strip()]
+    return {'name': parts[0] if parts else line, 'details': []}
+
+
+def parse_education(lines):
+    """从若干行解析教育背景"""
+    edu = {'school': '', 'date': '', 'major': '', 'research': ''}
+    for line in lines:
+        parts = [p.strip() for p in re.split(r'[·|，,]', line) if p.strip()]
+        if not parts:
+            continue
+        if not edu['school']:
+            edu['school'] = parts[0]
+        for p in parts[1:]:
+            if DATE_RE.search(p) and not edu['date']:
+                edu['date'] = p
+            elif not edu['major']:
+                edu['major'] = p
+            else:
+                edu['research'] = (edu['research'] + ' ' + p).strip()
+    return edu
+
+
+def parse_highlight(line):
+    """解析亮点行：标签：值"""
+    m = re.match(r'^([^:：]{1,12})[:：]\s*(.+)$', line)
+    if m:
+        return {'label': m.group(1).strip(), 'value': m.group(2).strip()}
+    return {'label': '亮点', 'value': line}
+
+
+def split_list_items(line):
+    """技能/标签行可能用逗号、顿号分隔"""
+    return [s.strip() for s in re.split(r'[,，、;；]', line) if s.strip()]
+
+
+def parse_resume_text(text):
+    """把 Markdown / docx 提取的纯文本解析为简历数据结构"""
+    data = {
+        'name': '', 'name_display': '', 'location': '', 'update_date': '',
+        'contact': {}, 'summary': '', 'self_evaluation': '',
+        'education': {}, 'experiences': [], 'projects': [],
+        'skills': [], 'honors': [], 'highlights': [],
+    }
+    current = None
+    name_found = False
+    exp = None
+    proj = None
+    summary_lines = []
+    self_lines = []
+    edu_lines = []
+
+    for raw in text.split('\n'):
+        raw = raw.strip()
+        if not raw:
+            continue
+        # Markdown 标题行
+        hm = re.match(r'^(#{1,6})\s*(.*)$', raw)
+        if hm:
+            level = len(hm.group(1))
+            content = hm.group(2).strip()
+            sec = match_section(content)
+            if sec:
+                current = sec
+                continue
+            if level == 1 and not name_found:
+                data['name'] = content
+                data['name_display'] = content
+                name_found = True
+                continue
+            if current == 'experiences':
+                exp = parse_exp_title(content)
+                data['experiences'].append(exp)
+                continue
+            if current == 'projects':
+                proj = parse_proj_title(content)
+                data['projects'].append(proj)
+                continue
+            continue
+        # 列表项标记
+        is_bullet = bool(re.match(r'^[-*+]\s+', raw))
+        content = re.sub(r'^[-*+]\s*', '', raw).strip()
+        if not content:
+            continue
+        # 纯文本分节标题（docx 通常无 # 标记）
+        sec = match_section(content)
+        if sec and len(content) <= 25:
+            current = sec
+            continue
+        # 顶部区域：姓名 / 联系方式
+        if current is None:
+            if not name_found:
+                data['name'] = content
+                data['name_display'] = content
+                name_found = True
+                continue
+            c = parse_contact_line(content)
+            if c:
+                data['contact'].update(c)
+                continue
+            summary_lines.append(content)
+            continue
+        # 分节内
+        if current == 'summary':
+            summary_lines.append(content)
+        elif current == 'self_evaluation':
+            self_lines.append(content)
+        elif current == 'education':
+            edu_lines.append(content)
+        elif current == 'experiences':
+            if is_bullet and exp is not None:
+                exp['description'].append(content)
+            elif looks_like_description(content) and exp is not None:
+                exp['description'].append(content)
+            else:
+                exp = parse_exp_title(content)
+                data['experiences'].append(exp)
+        elif current == 'projects':
+            if is_bullet and proj is not None:
+                proj['details'].append(content)
+            elif looks_like_description(content) and proj is not None:
+                proj['details'].append(content)
+            else:
+                proj = parse_proj_title(content)
+                data['projects'].append(proj)
+        elif current == 'skills':
+            data['skills'].extend(split_list_items(content))
+        elif current == 'honors':
+            data['honors'].append(content)
+        elif current == 'highlights':
+            data['highlights'].append(parse_highlight(content))
+
+    data['summary'] = ' '.join(summary_lines).strip()
+    data['self_evaluation'] = ' '.join(self_lines).strip()
+    if edu_lines:
+        data['education'] = parse_education(edu_lines)
+    if not data['name']:
+        data['name'] = data['name_display'] = '未命名'
+    return data
+
+
+def read_docx_text(docx_path):
+    """从 .docx 中提取正文段落文本（仅用标准库，无需 python-docx）"""
+    with zipfile.ZipFile(docx_path) as z:
+        xml = z.read('word/document.xml')
+    # 安全防护：拒绝含 DOCTYPE / ENTITY 声明的文档，防 XXE 与 billion-laughs 攻击
+    if b'<!DOCTYPE' in xml[:4096] or b'<!ENTITY' in xml:
+        raise ValueError('检测到不安全的 XML 声明，已拒绝解析该 .docx 文件')
+    ns = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+    root = ET.fromstring(xml)
+    lines = []
+    for p in root.iter('{%s}p' % ns):
+        texts = [t.text or '' for t in p.iter('{%s}t' % ns)]
+        line = ''.join(texts).strip()
+        if line:
+            lines.append(line)
+    return '\n'.join(lines)
+
+
+def load_data(input_path):
+    """按扩展名加载简历数据：.json / .md / .markdown / .docx"""
+    ext = os.path.splitext(input_path)[1].lower()
+    if ext == '.json':
+        with open(input_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    if ext in ('.md', '.markdown'):
+        with open(input_path, 'r', encoding='utf-8') as f:
+            return parse_resume_text(f.read())
+    if ext == '.docx':
+        return parse_resume_text(read_docx_text(input_path))
+    # 未知扩展名：尝试按 JSON 解析
+    with open(input_path, 'r', encoding='utf-8') as f:
+        return json.load(f)
 
 
 def build_experiences_html(experiences):
@@ -288,9 +544,9 @@ def copy_font_if_exists(skill_dir, output_path):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='个人简历生成器（JSON → HTML）')
-    parser.add_argument('json_file', help='JSON 简历数据文件路径')
-    parser.add_argument('--output', '-o', help='输出 HTML 文件路径（默认与 JSON 同目录）')
+    parser = argparse.ArgumentParser(description='个人简历生成器（JSON / Markdown / Word → HTML）')
+    parser.add_argument('input_file', help='简历数据文件路径（支持 .json / .md / .docx）')
+    parser.add_argument('--output', '-o', help='输出 HTML 文件路径（默认与输入文件同目录）')
     parser.add_argument(
         '--template', '-t',
         help='模板名（如 zhisong-sidebar）或模板文件路径（默认 kaiti-elegant）',
@@ -323,12 +579,12 @@ def main():
     if args.output:
         output_path = args.output
     else:
-        json_dir = os.path.dirname(os.path.abspath(args.json_file))
-        json_name = os.path.splitext(os.path.basename(args.json_file))[0]
+        json_dir = os.path.dirname(os.path.abspath(args.input_file))
+        json_name = os.path.splitext(os.path.basename(args.input_file))[0]
         output_path = os.path.join(json_dir, '{}_{}.html'.format(json_name, template_name))
 
     # 加载数据和模板
-    data = load_json(args.json_file)
+    data = load_data(args.input_file)
     template = load_template(template_path)
 
     # 应用配色

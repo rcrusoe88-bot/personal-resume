@@ -17,7 +17,7 @@
 - 📄 **A4 标准尺寸**：210mm × 297mm，浏览器直接打开即成品
 - 🔒 **本地处理**：全部在本地完成，不上传任何数据，保护隐私
 - 🖨️ **多种输出**：浏览器预览 / Ctrl+P 存 PDF / 开发者工具截全页
-- 🧩 **结构化输入**：JSON 定义联系方式、简介、教育、经历、项目、技能、荣誉、亮点，字段自由增减
+- 🧩 **多格式输入**：支持 JSON（.json）/ Markdown（.md）/ Word（.docx），自动识别并解析
 
 ## 快速开始
 
@@ -32,7 +32,11 @@ python scripts/generate.py examples/wushengjun.json --template zhisong-sidebar -
 # 4. 致宋 · 圆角卡片 + 秋波蓝，指定输出路径
 python scripts/generate.py data.json --template zhisong-cards --color 秋波蓝 --output my_resume.html
 
-# 5. 使用自定义模板
+# 5. 从 Markdown / Word 简历生成（自动识别格式）
+python scripts/generate.py resume.md --template zhisong-minimal --color 烟粉
+python scripts/generate.py resume.docx --template zhisong-breath
+
+# 6. 使用自定义模板
 python scripts/generate.py data.json --template templates/kaiti-elegant.html
 ```
 
@@ -108,6 +112,9 @@ python scripts/generate.py data.json --template templates/kaiti-elegant.html
 
 > `contact`、`summary`、`honors`、`self_evaluation` 为可选字段（致宋模板展示）；旧版 JSON 完全兼容。
 
+> **Markdown 输入**（.md）：按标题分节（个人简介/教育背景/工作经历/项目经历/专业技能/荣誉证书/个人亮点/自我评价），
+> 列表项作条目，`·` 分隔公司/职位/时间。完整规范见 [SKILL.md](SKILL.md)。**Word 输入**（.docx）：直接读取正文段落，按同样规则识别。
+
 ## 目录结构
 
 ```
@@ -129,7 +136,8 @@ personal-resume/
 ├── scripts/
 │   └── generate.py             # 生成脚本（JSON → HTML）
 └── examples/
-    └── wushengjun.json         # 示例数据（脱敏占位内容）
+    ├── wushengjun.json         # 示例数据 · JSON 格式（脱敏占位内容）
+    └── resume.md               # 示例数据 · Markdown 格式
 ```
 
 ## 触发关键词
